@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Search game{% endblock %}
+
+
+{% block content %}
+  <section id="showcase-inner" class="showcase-search text-white py-5">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <form action="{% url 'search' %}">
+              <!-- Form Row 1 -->
+              <div class="form-row">
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">Keywords</label>
+                  <input type="text" name="keywords" class="form-control" placeholder="Названия игры">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">Company</label>
+                  <input type="text" name="company" class="form-control" placeholder="От компании">
+                </div>
+
+
+              </div>
+              <!-- Form Row 2 -->
+              <div class="form-row">
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">Category</label>
+                  <select name="category" class="form-control">
+                    <option selected="true" disabled="disabled">По категорию</option>
+                    {% for k, v in category_choices.items %}
+                      <option value="{{ k }}">{{ v }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">Цена</label>
+                  <input type="text" name="price" class="form-control" placeholder="По цене">
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-block mt-4" type="submit">Submit form</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="index.html">
+              <i class="{% url 'index' %}"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="{% url 'listings' %}">Browse Listings</a>
+          </li>
+          <li class="breadcrumb-item active"> Search Results</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Listings -->
+  <section id="listings" class="py-4">
+    <div class="container">
+      <div class="row">
+        {% if games %}
+          {% for game in games %}
+            <!-- Listing 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                <img class="card-img-top" src="{{ game.photo_main.url }}" height="287px" alt="">
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">{% if game.price > 0 %}${{ game.price | intcomma }}{% else %} Free{% endif %}</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ game.title }}</h4>
+                    <p>
+                      <i class="fa fa-qrcode text-secondary" aria-hidden="true"></i> {{ game.category }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-th-large"></i> Win: {% if game.support_on_windows == True %}<i class="fa fa-plus"></i>{% else %}<i class="fa fa-minus"></i>{% endif %}</div>
+                    <div class="col-6">
+                      <i class="fa fa-laptop"></i> Mac: {% if game.support_on_mac == True %}<i class="fa fa-plus"></i>{% else %}<i class="fa fa-minus"></i>{% endif %}</div>
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fa fa-terminal"></i> Linux: {% if game.support_on_linux == True %}<i class="fa fa-plus"></i>{% else %}<i class="fa fa-minus"></i>{% endif %}</div>
+                    <div class="col-6">
+                      <i class="fas fa-bath"></i> RAM: {{ game.RAM }}</div>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-12">
+                      <i class="fas fa-user"></i> {{ game.author }}</div>
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-12">
+                      <i class="fas fa-clock"></i> {{ game.list_date | timesince}}</div>
+                  </div>
+                  <hr>
+                  <a href="{% url 'listing' game.id %}" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>No Games available</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

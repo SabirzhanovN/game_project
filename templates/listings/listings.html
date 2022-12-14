@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}All games{% endblock %}
+
+
+{% block content %}
+  <section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">About BT Real Estate</h1>
+          <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt, pariatur!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> Browse Listings</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Listings -->
+  <section id="listings" class="py-4 jumbotron">
+    <div class="container ">
+      <div class="row">
+        {% if games %}
+          {% for game in games %}
+            <!-- Listing 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                <img class="card-img-top" src="{{ game.photo_main.url }}" height="287px" alt="">
+                <div class="card-img-overlay">
+                  <h2>
+                    <span class="badge badge-secondary text-white">{% if game.price > 0 %}${{ game.price | intcomma }}{% else %} Free{% endif %}</span>
+                  </h2>
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ game.title }}</h4>
+                    <p>
+                      <i class="fa fa-qrcode text-secondary" aria-hidden="true"></i> {{ game.category }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-th-large"></i> Win: {% if game.support_on_windows == True %}<i class="fa fa-plus"></i>{% else %}<i class="fa fa-minus"></i>{% endif %}</div>
+                    <div class="col-6">
+                      <i class="fa fa-laptop"></i> Mac: {% if game.support_on_mac == True %}<i class="fa fa-plus"></i>{% else %}<i class="fa fa-minus"></i>{% endif %}</div>
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fa fa-terminal"></i> Linux: {% if game.support_on_linux == True %}<i class="fa fa-plus"></i>{% else %}<i class="fa fa-minus"></i>{% endif %}</div>
+                    <div class="col-6">
+                      <i class="fas fa-bath"></i> RAM: {{ game.RAM }}</div>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-12">
+                      <i class="fas fa-user"></i> {{ game.author }}</div>
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-12">
+                      <i class="fas fa-clock"></i> {{ game.list_date | timesince}}</div>
+                  </div>
+                  <hr>
+                  <a href="{% url 'listing' game.id %}" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>No Games available</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          {% if games.has_other_pages %}
+            <ul class="pagination">
+              {% if games.has_previous %}
+                <li class="page-item">
+                  <a href="?page={{ games.previous_page_number }}" class="page-link">&laquo;</a>
+                </li>
+              {% else %}
+                <li class="page-item disabled">
+                  <a class="page-link">&laquo;</a>
+                </li>
+              {% endif %}
+              {% for i in games.paginator.page_range %}
+                {% if games.number == i %}
+                  <li class="page-item active">
+                    <a class="page-link">{{ i }}</a>
+                  </li>
+                {% else %}
+                  <li class="page-item">
+                    <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+
+              {% if games.has_next %}
+                <li class="page-item">
+                  <a href="?page={{ games.next_page_number }}" class="page-link">&raquo;</a>
+                </li>
+              {% else %}
+                <li class="page-item disabled">
+                  <a class="page-link">&raquo;</a>
+                </li>
+              {% endif %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

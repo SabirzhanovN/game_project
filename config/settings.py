@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'listings.apps.ListingsConfig',
     'pages.apps.PagesConfig',
     'reviews.apps.ReviewsConfig',
+    'api_app.apps.ApiAppConfig',
 
     # frame-works
     'rest_framework',

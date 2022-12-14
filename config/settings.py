@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'reviews.apps.ReviewsConfig',
     'api_app.apps.ApiAppConfig',
+    'sendMessage.apps.SendmessageConfig',
 
     # frame-works
     'rest_framework',
